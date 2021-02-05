@@ -1,36 +1,75 @@
 ---
-title: "Dashboardku"
+title: "Dashboard"
 output: 
   flexdashboard::flex_dashboard:
     orientation: columns
     vertical_layout: fill
 ---
 
+```{r}
+# Jangan Lupa Install
+# tidyverse
+```
+
 ```{r setup, include=FALSE}
+# Load Library
 library(flexdashboard)
+library(tidyverse)
+library(plotly)
+library(hrbrthemes)
 ```
 
-Column {data-width=650}
+```{r include=FALSE}
+# Import Data
+df <- read_csv("customer-churn.csv")
+glimpse(df)
+```
+
+Column 
 -----------------------------------------------------------------------
 
-### Chart A
+### Jumlah Churn
 
 ```{r}
+# Jumlah Pelanggan Churn
+plot_churn <- df %>%
+  mutate(Churn2 = Churn) %>%
+  ggplot(aes(x = Churn, fill = Churn2)) +
+  geom_bar() 
 
+ggplotly(plot_churn,  tooltip = c("count", "Churn"))
 ```
 
-Column {data-width=350}
+
+Column 
 -----------------------------------------------------------------------
 
-### Chart B
+### Jumlah Churn Berdasrkan Kontrak
 
 ```{r}
+# Jumlah Pelanggan Churn
+plot_churn <- df %>%
+  select(Churn, Contract) %>%
+  group_by(Churn, Contract) %>%
+  count() %>%
+  ggplot(aes(x = Contract, y = n, fill = Churn)) +
+  geom_bar(stat = "identity", position = 'dodge') 
 
+ggplotly(plot_churn)
 ```
 
-### Chart C
+### Churn Berdasarkan Penggunaan Layanan internet
 
 ```{r}
+# Jumlah Pelanggan Churn
+# Jumlah Pelanggan Churn
+plot_churn <- df %>%
+  select(Churn, InternetService) %>%
+  group_by(Churn, InternetService) %>%
+  count() %>%
+  ggplot(aes(x = InternetService, y = n, fill = Churn)) +
+  geom_bar(stat = "identity", position = 'dodge') 
 
+ggplotly(plot_churn)
 ```
 
